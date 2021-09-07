@@ -31,3 +31,4 @@ resource "null_resource" "vm_node_init" {
 locals {
   appvmip = data.terraform_remote_state.appvm.outputs.vm_ip[0]
 }
+
