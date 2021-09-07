@@ -11,6 +11,10 @@ data "terraform_remote_state" "appvm" {
 
 
 resource "null_resource" "vm_node_init" {
+  triggers = {
+        trig = var.trigcount
+  }
+
   provisioner "file" {
     source = "scripts/"
     destination = "/tmp"
