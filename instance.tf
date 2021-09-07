@@ -11,6 +11,19 @@ data "terraform_remote_state" "appvm" {
 
 
 resource "null_resource" "vm_node_init" {
+  provisioner "file" {
+    source = "scripts/"
+    destination = "/tmp"
+    connection {
+      type = "ssh"
+      host = "${local.appvmip}" 
+      user = "root"
+      password = "${var.root_password}"
+      port = "22"
+      agent = false
+    }
+  }
+
   provisioner "remote-exec" {
     inline = [
         "chmod +x /tmp/appdremove.sh",
