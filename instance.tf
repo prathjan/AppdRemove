@@ -9,6 +9,16 @@ data "terraform_remote_state" "appvm" {
   }
 }
 
+data "terraform_remote_state" "global" {
+  backend = "remote"
+  config = {
+    organization = var.org
+    workspaces = {
+      name = var.globalwsname
+    }
+  }
+}
+
 
 variable "org" {
   type = string
@@ -26,7 +36,7 @@ resource "null_resource" "vm_node_init" {
       type = "ssh"
       host = "${local.appvmip}" 
       user = "root"
-      password = "${var.root_password}"
+      password = "${local.root_password}"
       port = "22"
       agent = false
     }
@@ -41,7 +51,7 @@ resource "null_resource" "vm_node_init" {
       type = "ssh"
       host = "${local.appvmip}"
       user = "root"
-      password = "${var.root_password}"
+      password = "${local.root_password}"
       port = "22"
       agent = false
     }
@@ -51,5 +61,6 @@ resource "null_resource" "vm_node_init" {
 
 locals {
   appvmip = data.terraform_remote_state.appvm.outputs.vm_ip[0]
+  root_password = yamldecode(data.terraform_remote_state.global.outputs.root_password)
 }
 
